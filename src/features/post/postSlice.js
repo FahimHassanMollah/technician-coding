@@ -1,11 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { fetchPostsApi } from './postApi';
+import { createPostApi, fetchPostsApi } from './postApi';
 import { toast } from 'react-toastify';
 
 const initialState = {
     posts: [],
     status: {
         fetchPosts:{
+            isLoading:false,
+            isSuccess:false,
+            isError:false,
+            error:null
+        },
+        createPost:{
             isLoading:false,
             isSuccess:false,
             isError:false,
@@ -23,8 +29,19 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (_, { rejec
         return rejectWithValue(error.response.data);
     }
 })
+
+export const createPost = createAsyncThunk('posts/createPost', async (data, { rejectWithValue }) => {
+    try {
+        const response = await createPostApi(data);
+        return response;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})
+
+
 export const postSlice = createSlice({
-    name: 'counter',
+    name: 'post',
     initialState,
     reducers: {
         increment: (state) => {
@@ -52,7 +69,7 @@ export const postSlice = createSlice({
             .addCase(fetchPosts.fulfilled, (state, action) => {
 
                 state.status.fetchPosts.isLoading = false;
-                state.posts = state.posts.concat(action.payload);
+                state.posts = action.payload;
                 state.status.fetchPosts.isSuccess = true;
             })
             .addCase(fetchPosts.rejected, (state, action) => {
@@ -60,6 +77,26 @@ export const postSlice = createSlice({
                 state.status.fetchPosts.isLoading = false;
                 // toast.error(action?.payload?.message ?? "something went wrong");
                 state.status.fetchPosts.error = action?.payload?.errors ?? [];
+                state.posts = [];
+            })
+            
+            .addCase(createPost.pending, (state, action) => {
+                state.status.createPost.isError = false;
+                state.status.createPost.isLoading = true;
+                state.status.createPost.isSuccess = false;
+                state.status.createPost.error = null;
+            })
+            .addCase(createPost.fulfilled, (state, action) => {
+
+                state.status.createPost.isLoading = false;
+                state.posts = action.payload;
+                state.status.createPost.isSuccess = true;
+            })
+            .addCase(createPost.rejected, (state, action) => {
+                state.status.createPost.isError = true;
+                state.status.createPost.isLoading = false;
+                // toast.error(action?.payload?.message ?? "something went wrong");
+                state.status.createPost.error = action?.payload?.errors ?? [];
                 state.posts = [];
             })
     }

@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom"
-import EmployeeAdd from "./pages/PostAdd";
 import PostsList from "./pages/PostsList";
+import PostAdd from "./pages/PostAdd";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<PostsList />} />
-        <Route path="/add-employee" element={<EmployeeAdd />} />
+        <Route path="/add-post" element={<PostAdd />} />
       </Routes>
     </>
   );
