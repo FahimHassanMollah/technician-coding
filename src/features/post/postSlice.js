@@ -15,9 +15,9 @@ const initialState = {
    
 }
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (data, { rejectWithValue }) => {
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (_, { rejectWithValue }) => {
     try {
-        const response = await fetchPostsApi(data);
+        const response = await fetchPostsApi();
         return response;
     } catch (error) {
         return rejectWithValue(error.response.data);

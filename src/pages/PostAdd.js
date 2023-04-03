@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import data from '../todo'
-const EmployeeAdd = () => {
+const PostAdd = () => {
   const [todo, setTodo] = useState({name: '', status: false});
   const addTodoHandler = (e) => {
     e.preventDefault();
@@ -31,4 +31,4 @@ const EmployeeAdd = () => {
   )
 }
 
-export default EmployeeAdd
+export default PostAdd
